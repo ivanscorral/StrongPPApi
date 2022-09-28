@@ -6,7 +6,7 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 const Users = require('./src/db/users/users');
-const Exercises = require('./src/api/data/exercises')
+const Exercises = require('./src/db/data/exercises')
 var app = express();
 
 app.use(logger('dev'));
@@ -20,6 +20,9 @@ users.authorize_user("admin", "1234", function(result){
     users.authorize_token(result);
 });
 var ex = new Exercises();
+ex.getExercises(function(result){
+    console.log(result);
+})
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 

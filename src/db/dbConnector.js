@@ -30,9 +30,10 @@ class DBConnector{
         });
     }
 
-    select(fields, table){
+    select(fields, table, callback){
         this.con.query("SELECT " + fields + " FROM " + table , function (err, result, fields) {
             if (err) throw err;
+            callback(result);
         });
     } 
     selectWhere(fields, table, condition, callback){
