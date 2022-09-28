@@ -8,8 +8,10 @@ class Exercises {
     insert_exercise(name, url){
         if(url){
             this.dbConnection.insert('Exercise(ex_name, img_url)', "('" + name + "', '" + url + "')");
+            return true
         }else{
             this.dbConnection.insert('Exercise(ex_name)', "('" + name + "')");
+            return true
         }
     }
     getExercises(callback){
