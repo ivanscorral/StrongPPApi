@@ -7,6 +7,10 @@ class Users {
         this.dbConnection.connect();
     }
 
+    register(name, pass){
+        this.dbConnection.insert('User(username, pass, registered_on)', "('" + name+ "', '" + pass + "', now())");
+    }
+
     authorize_user(name, pass, callback){
         this.dbConnection.selectWhere("*", "User", "User.username = '" + name + "' AND User.pass ='" + pass + "'", function(result){
             if(result.length > 0) {

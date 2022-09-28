@@ -38,7 +38,7 @@ class Tokens {
     getLastToken(userId, callback) {
         var self = this
         this.dbConnection.selectWhere('token, start_time, timeout_s', 'User_Session', "User_Session.user_id = " + userId + " ORDER BY id DESC LIMIT 1", function(result){
-            if(result){
+            if(result[0]){
                 const mDate = result[0].start_time;
                 const token = result[0].token;
                 const timeout_s = result[0].timeout_s;
@@ -48,7 +48,7 @@ class Tokens {
                     callback(self.generateToken(userId));
                 }
             }else{
-                console.log('No token found');
+                callback(self.generateToken(userId));
             }
         })
     }

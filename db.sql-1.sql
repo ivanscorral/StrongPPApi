@@ -22,7 +22,10 @@ SET time_zone = "+00:00";
 --
 
 -- --------------------------------------------------------
+CREATE USER 'strongpp'@'localhost' IDENTIFIED BY 'strongapp123';
 
+
+USE strongpp;
 --
 -- Estructura de tabla para la tabla `Entrenamiento`
 --
@@ -41,7 +44,7 @@ CREATE TABLE `Entrenamiento` (
 
 CREATE TABLE `Exercise` (
   `id` int(6) NOT NULL,
-  `ex_name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `ex_name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL UNIQUE,
   `img_url` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
