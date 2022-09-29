@@ -12,7 +12,6 @@ class Tokens {
         var self = this
         self.getToken(token, function(result)
         {
-            console.log(result);
             callback(result.user_id);
         })
     }
