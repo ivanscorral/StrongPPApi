@@ -20,7 +20,9 @@ var en = new Entrenamientos();
 var users = new Users();
 users.authorize_user("admin", "1234", function(result){
     users.authorize_token(result);
-    en.newEntrenamiento(result);
+    en.getLastEntrenamiento(1, function(entrenamiento){
+        console.log('entrenamiento: ' +  entrenamiento.fecha)
+    });         
 });
 var ex = new Exercises();
 ex.getExercises(function(result){

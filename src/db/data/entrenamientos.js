@@ -13,7 +13,6 @@ class Entrenamientos {
     newEntrenamiento(token, callback){
     var self = this;
         this.tokens.getTokenOwner(token, function(userId){
-            console.log(userId);
             self.dbConnection.insert('Entrenamiento(user_id, fecha)', '(' + userId + ', now())');
             self.getLastEntrenamiento(userId, function(entrenamiento) {
                 callback(entrenamiento);
@@ -21,9 +20,14 @@ class Entrenamientos {
         });
     }
 
-    getLastEntrenamiento(userId){
-
+    getLastEntrenamiento(userId, callback){
+        var self = this
+        this.dbConnection.selectWhere('*', 'Entrenamiento', 'Entrenamiento.user_id = ' + userId + ' ORDER BY Entrenamiento.id DESC LIMIT 1', function(result){
+            callback({id: result[0].id, fecha: result[0].fecha, user_id: result[0].user_id})
+        })
     }
+
+     
 
 }
 
