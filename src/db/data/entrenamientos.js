@@ -36,11 +36,10 @@ class Entrenamientos {
         var entrenamiento = await this.getEntrenamiento(entrenamientoId);          
         var seriesFull = await this.series.getSeriesFull(entrenamiento.id);
         return   { id: entrenamiento.id, series: seriesFull }
-
     }
-    async newEntrenamiento(token){
-        var userId = await this.tokens.getTokenOwner(token);
-        this.dbConnection.insert('Entrenamiento(user_id, fecha)', '(' + userId + ', now())')
+    
+    async newEntrenamiento(id_user){
+        this.dbConnection.insert('Entrenamiento(user_id, fecha)', '(' + id_user + ', now())')
     }
 
     async getEntrenamientoOwner(idEntrenamiento){

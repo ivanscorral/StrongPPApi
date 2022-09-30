@@ -21,7 +21,7 @@ class Repeticiones{
    insertRepeticion(idSerie, cantidad, peso) {
         this.dbConnection.insert('Repeticion(id_serie, cantidad, peso)', '(' + idSerie + ', ' + cantidad + ', ' + peso + ')');
    }
-   async getLastRepeticionNumber(serieID, ){
+   async getLastRepeticionNumber(serieID){
         var result = await this.dbConnection.selectWhereAsync('orden', 'Repeticion', 'id_serie = ' + serieID + ' ORDER BY orden desc LIMIT 1');
         return result[0].orden; 
    }
