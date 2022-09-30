@@ -1,9 +1,11 @@
 const DBConnector = require("../dbConnector");
+const Repeticiones = require('./repes.js');
 
 class Series {
     constructor() {
         this.dbConnection = new DBConnector();
         this.dbConnection.connect();
+        this.repes = new Repeticiones();
     }
     // Serie{id, id_entrenamiento, id_ejercicio}
     
@@ -11,16 +13,27 @@ class Series {
         this.dbConnection.insert('Serie(id_entrenamiento, id_ejercicio)', '(' + idEntrena + ', ' + idExercise + ')');
     }
 
-    getSeries(idEntrenamiento, callback){
-        var self = this;
-        this.dbConnection.selectWhere('*', 'Serie', 'id_entrenamiento =  ' + idEntrenamiento + ' ORDER BY id DESC', function(results){
-            var array = [];
-            results.forEach(element => {
-              array.push({id: element.id, id_entrenamiento: element.id_entrenamiento, id_ejercicio: element.id_ejercicio})  
-            });
-            callback(array);
-        })
+    async getSeries(idEntrenamiento){
+        var results = await this.dbConnection.selectWhereAsync('*', 'Serie', 'id_entrenamiento =  ' + idEntrenamiento + ' ORDER BY id DESC');
+        var array = [];
+
+        results.forEach(element => {
+            array.push({id: element.id, id_entrenamiento: element.id_entrenamiento, id_ejercicio: element.id_ejercicio})  
+        });
+        return array;
     }
+    async getSeriesFull(entrenamientoId){
+        var series = await this.getSeries(entrenamientoId)
+        var serieRepe = [];
+        for(const serie of series){
+
+            var repets = await this.repes.getRepeticiones(serie);
+            serie.repeticiones = repets;
+        }
+        
+        return series     
+    }
+
 }
 
 module.exports = Series

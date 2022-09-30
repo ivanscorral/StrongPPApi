@@ -8,18 +8,17 @@ class Tokens {
         this.tokenGenerator = new TokenGenerator();
     }
     
-    getTokenOwner(token, callback){
-        var self = this
-        self.getToken(token, function(result)
-        {
-            callback(result.user_id);
-        })
+    async getTokenOwner(token){
+        var result = await this.getToken(token);
+        console.log(result);
+        return result.user_id;
+
     }
 
-    getToken(token, callback){
-        this.dbConnection.selectWhere('*', 'User_Session', "token = '" + token + "' LIMIT 1", function(result){
-            if(result[0]) { callback({token: result[0].token, user_id: result[0].user_id,  start_time: result[0].start_time, timeout_s: result[0].timeout_s}) }
-        });
+    async getToken(token){
+        var result = await this.dbConnection.selectWhereAsync('*', 'User_Session', "token = '" + token + "' LIMIT 1");
+        if(result[0]) { return {token: result[0].token, user_id: result[0].user_id,  start_time: result[0].start_time, timeout_s: result[0].timeout_s} }
+
     }
     
     generateToken(userId){

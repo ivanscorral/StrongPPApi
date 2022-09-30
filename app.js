@@ -22,14 +22,16 @@ var en = new Entrenamientos();
 var series = new Series();
 var repes = new Repeticiones();
 var users = new Users();
-users.authorize_user("admin", "1234", function(result){
+users.authorize_user("admin", "1234", async function(result){
     users.authorize_token(result);
-    en.getLastEntrenamiento(1, function(entrenamientos){
-        series.getSeries(entrenamientos.id, function(results){
-            console.log('Adding repe to entrenamiento.id: ' + entrenamientos.id + ', series id: ' + results[0].id)
-            repes.insertRepeticion(results[0].id, 10, 10);
-        })
-    });         
+    var lastEntrena  = await en.getLastEntrenamiento(1);
+    var seriesFull = await en.getFullEntrenamiento(4);
+
+     console.log(seriesFull.series[0].repets);
+
+   /* en.getFullEntrenamiento(4, function(fullEntrena){   
+        console.log(fullEntrena);
+    });*/    
 });
 var ex = new Exercises();
 ex.getExercises(function(result){

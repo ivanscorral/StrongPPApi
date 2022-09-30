@@ -1,5 +1,5 @@
 var mysql = require('mysql');
-
+var util = require('util');
 class DBConnector{
     
     constructor() {
@@ -9,8 +9,26 @@ class DBConnector{
             password: "strongapp123",
             database: "strongpp"
         });
-        
-    }  
+        this.asyncCon = this.makeDb()
+    }
+    
+    makeDb() {
+        const connection = mysql.createConnection({
+            host: "localhost",
+            user: "strongpp",
+            password: "strongapp123",
+            database: "strongpp"
+        });
+        return {
+          query( sql, args ) {
+            return util.promisify( connection.query )
+              .call( connection, sql, args );
+          },
+          close() {
+            return util.promisify( connection.end ).call( connection );
+          }
+        };
+    }
     
     connect(){
         if(!this.connected){
@@ -20,6 +38,10 @@ class DBConnector{
                 this.connected = true;   
             });
         }
+    }
+
+    async selectWhereAsync(fields, table, condition){
+        return await this.asyncCon.query("SELECT " + fields + " FROM " + table + " WHERE " + condition)
     }
 
     insert(into, values) {
@@ -44,9 +66,7 @@ class DBConnector{
         });
         return this.result;
     }
-    close(){
 
-    }
 }
 
 module.exports = DBConnector
