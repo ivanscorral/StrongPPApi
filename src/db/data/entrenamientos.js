@@ -17,9 +17,15 @@ class Entrenamientos {
         });
     }
 
+    getEntrenamientoOwner(idEntrenamiento, callback){
+        this.dbConnection.selectWhere('user_id', 'Entrenamiento', 'Entrenamiento.id = ' + idEntrenamiento, function(result){
+            callback(result[0].user_id);
+        })
+    }
+
     getLastEntrenamiento(userId, callback){
         var self = this
-        this.dbConnection.selectWhere('*', 'Entrenamiento', 'Entrenamiento.user_id = ' + userId + ' ORDER BY Entrenamiento.id DESC LIMIT 1', function(result){
+        this.dbConnection.selectWhere('*', 'Entrenamiento', 'Entrenamiento.user_id = ' + userId + ' ORDER BY Entrenamiento.fecha DESC LIMIT 1', function(result){
             callback({id: result[0].id, fecha: result[0].fecha, user_id: result[0].user_id})
         })
     }

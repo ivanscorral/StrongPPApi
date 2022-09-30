@@ -65,7 +65,7 @@ INSERT INTO `Exercise` (`id`, `ex_name`, `img_url`) VALUES
 CREATE TABLE `Repeticion` (
   `id` int(10) NOT NULL,
   `id_serie` int(6) NOT NULL,
-  `orden` int(3) DEFAULT NULL,
+  `cantidad` int(6) DEFAULT NULL,
   `peso` float DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
