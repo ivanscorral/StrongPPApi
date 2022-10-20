@@ -14,7 +14,7 @@ class Entrenamientos {
     /* Entrenamiento: 
      { id: 1, fecha: now(), user_id: userid }
 
-     User{ id,
+     User{ id, fecha,
         entrenamientos[ 
             Entrenamiento {id, 
                 series[
@@ -35,9 +35,9 @@ class Entrenamientos {
     async getFullEntrenamiento(entrenamientoId){
         var entrenamiento = await this.getEntrenamiento(entrenamientoId);          
         var seriesFull = await this.series.getSeriesFull(entrenamiento.id);
-        return   { id: entrenamiento.id, series: seriesFull }
+        return   { id: entrenamiento.id, fecha: entrenamiento.fecha, series: seriesFull }
     }
-    
+
     async newEntrenamiento(id_user){
         this.dbConnection.insert('Entrenamiento(user_id, fecha)', '(' + id_user + ', now())')
     }

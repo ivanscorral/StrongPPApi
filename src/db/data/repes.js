@@ -29,7 +29,7 @@ class Repeticiones{
         var result = await this.dbConnection.selectWhereAsync('*', 'Repeticion', 'id_serie = ' + serie.id);
         var array = [];
         result.forEach(repeticion => {
-            array.push({id: repeticion.id, id_serie: repeticion.id_serie, cantidad: repeticion.cantidad, peso: repeticion.peso});
+            array.push({id: repeticion.id, cantidad: repeticion.cantidad, peso: repeticion.peso});
         });
         return array;
    } 
