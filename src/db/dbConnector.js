@@ -33,35 +33,36 @@ class DBConnector{
     connect(){
         if(!this.connected){
             this.con.connect(function(err) {
-                if (err) throw err;
-                console.log("Connected!");
+                if (err){ console.log("SQL ERROR: " + err.sqlMessage) }
                 this.connected = true;   
             });
         }
     }
 
-    async selectWhereAsync(fields, table, condition){
-        return await this.asyncCon.query("SELECT " + fields + " FROM " + table + " WHERE " + condition)
+    async selectWhereAsync(fields, table, condition, debug = false){
+        let query = "SELECT " + fields + " FROM " + table + " WHERE " + condition;
+        if(debug) console.log(query)
+        return await this.asyncCon.query(query)
     }
 
     insert(into, values) {
         var sql = "INSERT INTO " + into + " VALUES " + values;
         this.con.query(sql, function (err, result) {
-            if (err) throw err;
-            console.log("1 record inserted");
+            if (err){ console.log("SQL ERROR: " + err.sqlMessage) }
+            else{ console.log("1 record inserted");}
         });
     }
 
     select(fields, table, callback){
         this.con.query("SELECT " + fields + " FROM " + table , function (err, result, fields) {
-            if (err) throw err;
+            if (err){ console.log("SQL ERROR: " + err.sqlMessage) }
             callback(result);
         });
     } 
     selectWhere(fields, table, condition, callback){
         
         this.con.query("SELECT " + fields + " FROM " + table + " WHERE " + condition, function (err, result, fields) {
-            if (err) throw err;
+            if (err){ console.log("SQL ERROR: " + err.sqlMessage) }
             callback(result);
         });
         return this.result;
