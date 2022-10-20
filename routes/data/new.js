@@ -1,13 +1,20 @@
 var express = require('express');
 var router = express.Router();
+var EndpointUtils = require('../../src/endpointUtils')
+var Users = require('../../src/db/users/users');
+
 
 /* GET home page. */
 /* Required params:
 *   - username
-*   - pass: password
+*   - passwd: password
 */
-router.post('/new/user', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+router.post('/user', function(req, res, next) {
+    let username = req.body.username;
+    let pass = req.body.passwd;
+    let users = new Users();
+    users.register(username, pass);
+    res.status(200).send(EndpointUtils.generateResponseMessage('200 OK', 'ok'));
 });
 
 /* Required params:

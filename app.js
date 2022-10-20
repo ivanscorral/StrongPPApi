@@ -2,9 +2,12 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var util = require('util')
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var dataNewRouter = require('./routes/data/new');
+
 const Users = require('./src/db/users/users');
 const Exercises = require('./src/db/data/exercises');
 const Entrenamientos = require('./src/db/data/entrenamientos');
@@ -26,12 +29,9 @@ users.authorize_user("admin", "1234", async function(result){
     users.authorize_token(result);
     var lastEntrena  = await en.getLastEntrenamiento(1);
     var seriesFull = await en.getFullEntrenamiento(4);
-
-     console.log(seriesFull.series[0].repets);
-
-   /* en.getFullEntrenamiento(4, function(fullEntrena){   
-        console.log(fullEntrena);
-    });*/    
+var exe = await series.getExerciseName(3)
+    console.log(JSON.stringify(seriesFull))
+    console.log(exe)
 });
 var ex = new Exercises();
 ex.getExercises(function(result){
@@ -42,5 +42,7 @@ ex.getExercises(function(result){
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/data/new/', dataNewRouter);
+
 
 module.exports = app;

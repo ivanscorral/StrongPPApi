@@ -89,7 +89,7 @@ CREATE TABLE `Serie` (
 
 CREATE TABLE `User` (
   `id` int(6) NOT NULL,
-  `username` varchar(25) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `username` varchar(25) UNIQUE COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `pass` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `registered_on` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
