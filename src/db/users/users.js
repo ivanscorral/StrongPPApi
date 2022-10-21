@@ -7,8 +7,11 @@ class Users {
         this.dbConnection.connect();
     }
 
-    register(name, pass){
-        this.dbConnection.insert('User(username, pass, registered_on)', "('" + name+ "', '" + pass + "', now())");
+    register(name, pass, cb){
+        this.dbConnection.insert('User(username, pass, registered_on)', "('" + name+ "', '" + pass + "', now())", function(err) 
+        {
+            cb(err);
+        });
     }
 
     authorize_user(name, pass, callback){

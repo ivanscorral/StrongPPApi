@@ -6,7 +6,7 @@ var util = require('util')
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var dataNewRouter = require('./routes/data/new');
+var dataRouter = require('./routes/data');
 
 const Users = require('./src/db/users/users');
 const Exercises = require('./src/db/data/exercises');
@@ -42,7 +42,7 @@ ex.getExercises(function(result){
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/data/new/', dataNewRouter);
+app.use('/data/', dataRouter);
 
 
 module.exports = app;

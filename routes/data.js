@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
-var EndpointUtils = require('../../src/endpointUtils')
-var Users = require('../../src/db/users/users');
+var EndpointUtils = require('../src/endpointUtils')
+var Users = require('../src/db/users/users');
 
 
 /* GET home page. */
@@ -13,7 +13,9 @@ router.post('/user', function(req, res, next) {
     let username = req.body.username;
     let pass = req.body.passwd;
     let users = new Users();
-    users.register(username, pass);
+    users.register(username, pass, function(err){
+        res.status(500).send(EndpointUtils.generateResponseMessage('500 Internal Server error', err));
+    });
     res.status(200).send(EndpointUtils.generateResponseMessage('200 OK', 'ok'));
 });
 
@@ -22,13 +24,13 @@ router.post('/user', function(req, res, next) {
 *   - exercise image url (optional)
 */
 
-router.post('/new/exercise', function(req, res, next) {
+router.post('/exercise', function(req, res, next) {
     res.render('index', { title: 'Express' });
   });
 /* Required params:
 *   - user token
 */
-router.post('/new/entrenamiento', function(req, res, next) {
+router.post('/entrenamiento', function(req, res, next) {
 res.render('index', { title: 'Express' });
 });
 /* Required params:
@@ -36,7 +38,7 @@ res.render('index', { title: 'Express' });
 *   - id entrena
 *   - id exercise
 */
-router.post('/new/serie', function(req, res, next) {
+router.post('/serie', function(req, res, next) {
     res.render('index', { title: 'Express' });
 });
 
@@ -46,7 +48,7 @@ router.post('/new/serie', function(req, res, next) {
 *   - no repeticiones
 *   - peso
 */
-router.post('/new/repeticion', function(req, res, next) {
+router.post('/repeticion', function(req, res, next) {
     res.render('index', { title: 'Express' });
 });
   

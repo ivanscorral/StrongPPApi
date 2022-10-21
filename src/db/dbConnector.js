@@ -45,10 +45,13 @@ class DBConnector{
         return await this.asyncCon.query(query)
     }
 
-    insert(into, values) {
+    insert(into, values, error) {
         var sql = "INSERT INTO " + into + " VALUES " + values;
         this.con.query(sql, function (err, result) {
-            if (err){ console.log("SQL ERROR: " + err.sqlMessage) }
+            if (err){ 
+                error(err)
+                console.log("SQL ERROR: " + err.sqlMessage) 
+            }
             else{ console.log("1 record inserted");}
         });
     }

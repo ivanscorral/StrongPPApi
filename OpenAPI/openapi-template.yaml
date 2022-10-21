@@ -1,0 +1,258 @@
+  openapi: 3.0.3
+  info:
+    title: Strong++
+    version: 0.0.1rc0.2
+    description: >-
+      The Strong++ API will serve the iOS version of the app and act as a mediator
+      between the server database and the client side logic and database. It
+      provides access to all of the data on the server, allows for authentication
+      of users and syncs offline content with the cloud.
+  servers:
+    - url: http://localhost:3000
+  paths:
+    /data/serie:
+      post:
+        tags:
+          - "Series"
+        summary: >-
+          Creates a new series.
+        parameters:
+          - name: id_repeticiones
+            in: query
+            required: true
+            schema:
+              type: array
+              items:
+                type: integer
+                minimum: 0
+          - name: training_id
+            in: query
+            required: true
+            schema:
+              type: integer
+        responses:
+          '200':
+              description: Operation successful
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    $ref: '#/components/schemas/OperationSuccessful'
+          '401':
+            description: Bad request
+            content:
+              application/json:
+                schema:
+                  type: object
+                  $ref: '#/components/schemas/DuplicateError'
+          default:
+            description: Unexpected error server error
+            content:
+             application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorModel'
+    /data/serie/{id}:
+      get:
+        tags:
+          - "Series"
+        summary: Summary
+        description: >
+          Descripcion
+        parameters:
+          - name: id
+            in: path
+            description: Series id
+            required: true
+            schema:
+              type: integer
+              format: int32
+        responses:
+          '200':
+            description: Return series
+            content:
+              application/json:
+                schema:
+                  type: object
+                  $ref: '#/components/schemas/Serie'
+    /data/user:
+      post:
+        tags:
+          - "Users"
+        summary: >-
+          Creates a new user with the given credentials. Username should be
+          unique.
+        parameters:
+          - name: username
+            in: query
+            required: true
+            description: Username for the new user.
+            schema:
+              type: string
+          - name: password
+            in: query
+            required: true
+            description: Password for the new user.
+            schema:
+              type: string
+        responses:
+          '200':
+            description: Operation successful
+            content:
+              application/json:
+                schema:
+                  type: object
+                  $ref: '#/components/schemas/OperationSuccessful'
+          '401':
+            description: Bad request
+            content:
+              application/json:
+                schema:
+                  type: object
+                  $ref: '#/components/schemas/DuplicateError'
+          default:
+            description: Unexpected error server error
+            content:
+              application/json:
+                schema:
+                  type: object
+                  $ref: '#/components/schemas/ErrorModel'
+  components:
+    schemas:
+      User:
+        type: object
+        properties:
+          id:
+            type: integer
+            format: int16
+            default: 72
+            description: Id for the user
+          username:
+            type: string
+            default: 
+            description: Name of the user
+          password:
+            type: string
+            default: hunter2
+            description: Password of the user
+          trainings:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  format: int16
+                  description: Id for the training session
+                fecha:
+                  type: string
+                  description: Datetime of the creation of the sessuib,
+      Exercise:
+        type: object
+        properties:
+          id:
+            type: integer
+            format: int16
+            description: Id for the exercise
+          ex_name:
+            type: string
+            description: Name of the exercise
+      Training:
+        type: object
+        properties:
+          id:
+            type: integer
+            format: int16
+            description: Id for the training session
+          fecha:
+            type: string
+            description: Datetime of the creation of the sessuib,
+      User_Session:
+        type: object
+        properties:
+          id:
+            type: integer
+            description: Id for session
+          token:
+            type: string
+            description: Token for the session
+          user:
+            type: object
+            $ref: '#components/schemas/User'
+            description: Owner of the token
+          start_time:
+            type: string
+            description: start of the token validity
+          timeout_s:
+            type: string
+            description: Timeout of the token in seconds
+      Repeticion:
+        type: object
+        properties:
+          id: 
+            type: integer
+            format: int16
+            description: Id for the exercise
+            default: 6
+          peso:
+            type: number
+            minimum: 0
+          repeticiones:
+            type: integer
+            default: 12
+            format: int32
+            minimum: 0
+      Serie:
+        type: object
+        properties:
+          ejercicio:
+            type: object
+            description: Exercise for this series
+            $ref: '#/components/schemas/Exercise'
+          repeticiones:
+            type: array
+            items:
+               type: object
+               $ref: '#/components/schemas/Repeticion'
+      OperationSuccessful:
+        type: object
+        required:
+          - code
+          - message
+        properties:
+          code:
+            type: integer
+            description: HTTP Status Code
+            default: 200
+          message:
+            type: string
+            default: Operation successful
+            description: Operation was successful
+      ErrorModel:
+        type: object
+        required:
+          - code
+          - message
+        properties:
+          code:
+            type: integer
+            description: HTTP Status Code
+            minimum: 300
+            maximum: 599
+          error:
+            type: string
+            description: Message associated with that status code
+      DuplicateError:
+        type: object
+        required:
+          - code
+          - message
+        properties:
+          code:
+            type: integer
+            description: HTTP Status Code
+            default: 401
+          error:
+            type: string
+            default: Duplicate entry
+            description: Duplicate entry on database.
