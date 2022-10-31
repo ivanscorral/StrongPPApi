@@ -1,7 +1,7 @@
   openapi: 3.0.3
   info:
     title: Strong++
-    version: 0.0.1rc0.2
+    version: 0.0.1rc0.4
     description: >-
       The Strong++ API will serve the iOS version of the app and act as a mediator
       between the server database and the client side logic and database. It
@@ -145,6 +145,59 @@
                     items:
                       type: object 
                       $ref: '#/components/schemas/Repeticion'
+    /data/exercises:
+        get:
+          tags:
+            - "Ejercicios"
+          summary: Get ejercicios
+          description: >
+            Descripcion
+          responses:
+            '200':
+              description: Return all exercises
+              content:
+                application/json:
+                  schema:
+                    type: array
+                    items:
+                      type: object 
+                      properties:
+                        id:
+                          type: integer
+                          format: int16
+                          description: exercise Id
+                          default: 16
+                        name:
+                          type: string
+                          description: exercise name
+                          default: Dumbbell curl
+    /data/exercise/{id}:
+      get:
+          tags:
+            - "Ejercicios"
+          summary: Get ejercicio by id
+          description: >
+            Descripcion
+          parameters:
+            - name: id
+              in: path
+              required: true
+              schema:
+                type: integer
+                format: int16
+              description: Ejercicio id 
+          responses:
+            '200':
+              description: Return exercise with that id
+              content:
+                application/json:
+                  schema:
+                    type: array
+                    items:
+                      type: object 
+                      $ref: '#/components/schemas/Exercise'
+
+                
     /data/serie/{id}:
       get:
         tags:
@@ -212,6 +265,113 @@
                 schema:
                   type: object
                   $ref: '#/components/schemas/ErrorModel'
+    /data/training:
+      post:
+        tags:
+          - "Training"
+        summary: >-
+          Creates a new training.
+
+        responses:
+          '200':
+            description: Operation successful
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    result:
+                      type: object
+                      $ref: '#/components/schemas/OperationSuccessful'
+                    training:
+                      type: object
+                      $ref: '#/components/schemas/Training'
+          '401':
+            description: Bad request
+            content:
+              application/json:
+                schema:
+                  type: object
+                  $ref: '#/components/schemas/DuplicateError'
+          default:
+            description: Unexpected error server error
+            content:
+              application/json:
+                schema:
+                  type: object
+                  $ref: '#/components/schemas/ErrorModel'
+    /data/training/{id}:
+      get:
+        tags:
+          - "Training"
+        summary: Get training
+        description: >
+          Descripcion
+        parameters:
+          - name: id
+            in: path
+            description: Training id
+            required: true
+            schema:
+              type: integer
+              format: int16
+        responses:
+          '200':
+            description: Return training
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    type: object
+                    $ref: '#/components/schemas/Training'
+    /auth/login:
+      post:
+        tags:
+          - "Auth"
+        summary: >-
+          Creates a new session or returns the latest still available one.
+        parameters:
+          - name: username
+            in: query
+            required: true
+            description: Username for the new user.
+            schema:
+              type: string
+          - name: password
+            in: query
+            required: true
+            description: Password for the new user.
+            schema:
+              type: string
+        responses:
+          '200':
+            description: Operation successful
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    result:
+                       type: object
+                       $ref: '#/components/schemas/OperationSuccessful'
+                    session:
+                      type: object
+                      $ref: '#/components/schemas/User_Session'
+          '403':
+            description: Bad request
+            content:
+              application/json:
+                schema:
+                  type: object
+                  $ref: '#/components/schemas/BadCredentials'
+          default:
+            description: Unexpected error server error
+            content:
+              application/json:
+                schema:
+                  type: object
+                  $ref: '#/components/schemas/ErrorModel'
   components:
     schemas:
       Exercise:
@@ -221,9 +381,15 @@
             type: integer
             format: int16
             description: Id for the exercise
+            default: 3
           ex_name:
             type: string
             description: Name of the exercise
+            default: "Dumbbell curl"
+          ex_url:
+            type: string
+            description: URL for photo of the exercise
+            default: "https://example.com/dumbbbellcurl.png"
       User:
         type: object
         properties:
@@ -234,7 +400,7 @@
             description: Id for the user
           username:
             type: string
-            default: 
+            default: username
             description: Name of the user
           password:
             type: string
@@ -248,6 +414,7 @@
                 id:
                   type: integer
                   format: int16
+                  default: 3
                   description: Id for the training session
                 fecha:
                   type: string
@@ -258,6 +425,7 @@
           id:
             type: integer
             format: int16
+            default: 4
             description: Id for the training session
           fecha:
             type: string
@@ -267,19 +435,22 @@
         properties:
           id:
             type: integer
+            default: 2
             description: Id for session
           token:
             type: string
+            default: "ju33nq-349339n-ddfmsd7-ch7sns43-sddsg76s"
             description: Token for the session
-          user:
-            type: object
-            $ref: '#/components/schemas/User'
+          user_id:
+            type: integer
+            default: 5
             description: Owner of the token
           start_time:
             type: string
             description: start of the token validity
           timeout_s:
             type: string
+            default: 7200
             description: Timeout of the token in seconds
       Repeticion:
         type: object
@@ -337,6 +508,20 @@
           error:
             type: string
             description: Message associated with that status code
+      BadCredentials:
+        type: object
+        required:
+          - code
+          - message
+        properties:
+          code:
+            type: integer
+            description: HTTP Status Code
+            default: 403
+          error:
+            type: string
+            default: Bad authentication
+            description:  Bad authentication
       DuplicateError:
         type: object
         required:
